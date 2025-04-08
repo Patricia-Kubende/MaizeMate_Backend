@@ -56,7 +56,24 @@ def predict_yield(data: dict, db: Session = Depends(get_db)):
         else:
             category = "Low Yield"
             recommendation = "❌ Apply more fertilizer and optimize planting date."
+         # **🔍 Dynamic Recommendations Based on Input**
+        if data.get("Soil_Type") in ["Sandy", "Silt"]:
+            recommendation += " 🌱 Sandy/Silt soil may require more organic matter for better water retention."
 
+        if data.get("pH", 7.0) < 5.5:  # Default to neutral pH if missing
+            recommendation += " 🔬 The soil is too acidic! Consider adding lime to increase pH."
+
+        if data.get("Rainfall_mm", 0) < 400:
+            recommendation += " ☔️ Rainfall is low! Implement irrigation techniques for better results."
+
+        if data.get("Humidity_%", 100) < 40:
+            recommendation += " 💦 Low humidity detected! Monitor moisture levels to prevent crop stress."
+
+        if data.get("Fertilizer_Type") == "Organic":
+            recommendation += " 🌿 Organic fertilizer is good for sustainability but may take longer to release nutrients."
+
+        if data.get("Planting_Date") == "March":
+            recommendation += " 📅 Early planting may expose crops to dry conditions. Monitor weather patterns."
         # Store prediction in the database
         db_prediction = Prediction(
             Soil_Type=data["Soil_Type"],

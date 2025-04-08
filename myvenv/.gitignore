@@ -10,7 +10,5 @@ myvenv/
 # SQLite database
 instance/
 
-# IDE-specific (optional)
-.vscode/
-.idea/
+
 
