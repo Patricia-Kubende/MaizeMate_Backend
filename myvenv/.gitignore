@@ -1,0 +1,16 @@
+# Python and environment
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+myvenv/
+.env
+
+# SQLite database
+instance/
+
+# IDE-specific (optional)
+.vscode/
+.idea/
+
