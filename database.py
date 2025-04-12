@@ -4,7 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # ✅ Configurable database URL with fallback
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./maize_yield.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./instance/app.db")
+
 
 # ✅ Enhanced engine creation with Render compatibility
 if DATABASE_URL.startswith("sqlite"):
@@ -16,9 +17,9 @@ if DATABASE_URL.startswith("sqlite"):
     )
     
     # Ensure directory exists for SQLite file
-    if not DATABASE_URL.startswith("sqlite:////tmp"):
-        db_path = DATABASE_URL.split("///")[-1]
-        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    if not os.path.exists('./instance'):
+        os.makedirs('./instance')
+
 else:
     # Configuration for other databases (PostgreSQL, MySQL, etc.)
     engine = create_engine(DATABASE_URL)
@@ -43,6 +44,16 @@ class Prediction(Base):
     Confidence_Range = Column(String, nullable=False)
     Category = Column(String, nullable=False)
     Recommendation = Column(String, nullable=False)
+
+# ✅ New: User model for signup/login
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+
 
 # ✅ Your original table creation
 Base.metadata.create_all(bind=engine)

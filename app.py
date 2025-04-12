@@ -4,8 +4,9 @@ import pickle
 import pandas as pd
 import uvicorn
 from sqlalchemy.orm import Session
-from database import SessionLocal, Prediction
-
+from database import SessionLocal, Prediction, User, get_db
+from schemas import UserCreate, UserLogin, Token
+from auth import hash_password, verify_password, create_access_token
 app = FastAPI()
 
 # Load the trained model once at startup
