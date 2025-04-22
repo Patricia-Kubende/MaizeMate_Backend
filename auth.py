@@ -1,9 +1,10 @@
-from passlib.context import CryptContext
+import os
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
+from passlib.context import CryptContext
+from jose import jwt
 
-# Secret key (use a secure random one for production!)
-SECRET_KEY = "your_secret_key_here"
+# load SECRET_KEY from env
+SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-change-me")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -15,8 +16,8 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
-def create_access_token(data: dict, expires_delta: timedelta = None):
+def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
